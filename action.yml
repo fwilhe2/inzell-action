@@ -12,7 +12,6 @@ outputs:
 runs:
   using: "composite"
   steps:
-    - uses: fwilhe2/setup-kotlin@main
     - name: Install Inzell Devel version
       run: |
         git clone -b master https://github.com/fwilhe2/Inzell
