@@ -1,0 +1,37 @@
+name: 'Hello World'
+description: 'Greet someone'
+inputs:
+  who-to-greet:  # id of input
+    description: 'Who to greet'
+    required: true
+    default: 'World'
+outputs:
+  random-number:
+    description: "Random number"
+    value: ${{ steps.random-number-generator.outputs.random-id }}
+runs:
+  using: "composite"
+  steps:
+    - uses: fwilhe2/setup-kotlin@main
+    - name: Install Inzell Devel version
+      run: |
+        git clone -b master https://github.com/fwilhe2/Inzell
+        cd Inzell
+        ./gradlew publishToMavenLocal
+        find $HOME/.m2
+      shell: bash
+    - name: Calculate
+      run: |
+        kotlinc -cp /home/runner/.m2/repository/com/github/fwilhe/inzell/inzell-jvm/0.0.3.norelease/inzell-jvm-0.0.3.norelease.jar -d target PerformanceModel.kt
+        kotlin -cp /home/runner/.m2/repository/com/github/fwilhe/inzell/inzell-jvm/0.0.3.norelease/inzell-jvm-0.0.3.norelease.jar -cp target PerformanceModelKt
+      shell: bash
+    - run: cat foo.md
+      shell: bash
+
+    - name: create issue
+      run: |
+        BODY=`cat foo.md`
+        gh issue create --title abc --body "$BODY"
+      shell: bash
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
