@@ -32,5 +32,4 @@ runs:
         BODY=`cat foo.md`
         gh issue create --title abc --body "$BODY"
       shell: bash
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
